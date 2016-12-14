@@ -14,33 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from rest_framework import routers, serializers, viewsets
 from django.contrib import admin
-from rest_framework.urlpatterns import format_suffix_patterns
-from question.models import QuestionableFact
-from question import views
 
-class QuestionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = QuestionableFact
-        fields = ('questionable_fact', 'user_question', 'questionable_fact_url', 'created_time')
-
-# ViewSets define the view behavior.
-class QuestionViewSet(viewsets.ModelViewSet):
-    queryset = QuestionableFact.objects.all()
-    serializer_class = QuestionSerializer
-
-
-# Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
-router.register(r'questions', QuestionViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include(router.urls)),
+    url(r'^', include('question.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^questions/$', views.question_list),
-    url(r'^questions/(?P<pk>[0-9]+)$', views.question_list),
 ]
 
-# urlpatterns = format_suffix_patterns(urlpatterns)
+#urlpatterns = format_suffix_patterns(urlpatterns)
